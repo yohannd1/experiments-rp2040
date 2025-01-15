@@ -9,6 +9,14 @@
 
 #define BUZZER_PIN 10
 
+// TODO: MML string: notes
+// TODO: MML string: octaves
+// TODO: MML string: note lengths
+// TODO: MML string: `.` to make the length a little bit bigger
+// TODO: MML string: pitch slide
+// TODO: two channels! (two buzzers and always sleep for the shortest duration)
+// TODO: precompile MML to avoid realtime playback issues
+
 int main(void) {
 	stdio_init_all();
 
@@ -33,36 +41,18 @@ int main(void) {
 
 	/* const char *song = "cegb"; */
 	const uint interval = 50;
+	const uint bpm = 120;
+
+	// invert b/m to get m/b, then convert m/b to 60k ms/b
+	const double ms_per_beat = 1000.0 * 60.0 * (1.0 / (double)bpm);
+
+	Buzzer_play(&bz, pitches[0], (uint)ms_per_beat);
+	Buzzer_play(&bz, pitches[1], (uint)ms_per_beat);
+	Buzzer_play(&bz, pitches[2], (uint)ms_per_beat);
+	Buzzer_play(&bz, pitches[3], (uint)ms_per_beat);
 
 	// I FUCKING LOVE 7TH CHORDS
-
-	for (int i = 0; i < 16; i++) {
-		Buzzer_play(&bz, pitches[0], interval);
-		Buzzer_play(&bz, pitches[4], interval);
-		Buzzer_play(&bz, pitches[7], interval);
-		Buzzer_play(&bz, pitches[11], interval);
-	}
-
-	for (int i = 0; i < 16; i++) {
-		Buzzer_play(&bz, pitches[0+2], interval);
-		Buzzer_play(&bz, pitches[4+2], interval);
-		Buzzer_play(&bz, pitches[7+2], interval);
-		Buzzer_play(&bz, pitches[11+2], interval);
-	}
-
-	for (int i = 0; i < 16; i++) {
-		Buzzer_play(&bz, pitches[0+3], interval);
-		Buzzer_play(&bz, pitches[3+3], interval);
-		Buzzer_play(&bz, pitches[7+3], interval);
-		Buzzer_play(&bz, pitches[10+3], interval);
-	}
-
-	for (int i = 0; i < 16; i++) {
-		Buzzer_play(&bz, pitches[0+5], interval);
-		Buzzer_play(&bz, pitches[4+5], interval);
-		Buzzer_play(&bz, pitches[7+5], interval);
-		Buzzer_play(&bz, pitches[11+5], interval);
-	}
+	// CMaj7 DMaj7 D#Min7 FMaj7
 
 	/* size_t octave = 4; */
 	/* for (int i = 0;; i++) { */
