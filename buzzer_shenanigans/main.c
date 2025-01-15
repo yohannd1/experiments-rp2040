@@ -31,7 +31,7 @@ void play_tone(uint pin, uint32_t frequency, uint duration_ms) {
 	uint32_t top = clock_freq / frequency - 1;
 
 	pwm_set_wrap(slice_num, top);
-	pwm_set_gpio_level(pin, top / 16);
+	pwm_set_gpio_level(pin, top / 2);
 
 	sleep_ms(duration_ms);
 
@@ -41,6 +41,11 @@ void play_tone(uint pin, uint32_t frequency, uint duration_ms) {
 int main(void) {
 	stdio_init_all();
 	pwm_init_buzzer(BUZZER_PIN);
+
+	/* Buzzer bz; */
+	/* Buzzer_init(&bz, BUZZER_PIN); */
+	/* Buzzer_deinit(&bz); */
+	/* Buzzer_play(2090, 1000); */
 
 	double c4_pitch = 2090.0; // WHY THE FUCK
 
@@ -53,14 +58,58 @@ int main(void) {
 		pitches[i] = (uint32_t)freq;
 	}
 
-	for (int i = 0; i < table_size; i++) {
-		play_tone(BUZZER_PIN, pitches[i], 100);
+	/* for (int i = 0; i < table_size; i++) { */
+	/* 	play_tone(BUZZER_PIN, pitches[i], 100); */
+	/* } */
+
+	/* const char *song = "cegb"; */
+	const uint interval = 50;
+
+	// I FUCKING LOVE 7TH CHORDS
+
+	for (int i = 0; i < 16; i++) {
+		play_tone(BUZZER_PIN, pitches[0], interval);
+		play_tone(BUZZER_PIN, pitches[4], interval);
+		play_tone(BUZZER_PIN, pitches[7], interval);
+		play_tone(BUZZER_PIN, pitches[11], interval);
 	}
 
-	/* const char *song = "ceg>b<"; */
+	for (int i = 0; i < 16; i++) {
+		play_tone(BUZZER_PIN, pitches[0+2], interval);
+		play_tone(BUZZER_PIN, pitches[4+2], interval);
+		play_tone(BUZZER_PIN, pitches[7+2], interval);
+		play_tone(BUZZER_PIN, pitches[11+2], interval);
+	}
 
+	for (int i = 0; i < 16; i++) {
+		play_tone(BUZZER_PIN, pitches[0+3], interval);
+		play_tone(BUZZER_PIN, pitches[3+3], interval);
+		play_tone(BUZZER_PIN, pitches[7+3], interval);
+		play_tone(BUZZER_PIN, pitches[10+3], interval);
+	}
+
+	for (int i = 0; i < 16; i++) {
+		play_tone(BUZZER_PIN, pitches[0+5], interval);
+		play_tone(BUZZER_PIN, pitches[4+5], interval);
+		play_tone(BUZZER_PIN, pitches[7+5], interval);
+		play_tone(BUZZER_PIN, pitches[11+5], interval);
+	}
+
+	/* size_t octave = 4; */
 	/* for (int i = 0;; i++) { */
-	/* 	if (song[i] == ) */
+	/* 	if (song[i] == '\0') i = 0; */
+
+	/* 	char ch = song[i]; */
+
+	/* 	/1* if (ch == '>') { *1/ */
+	/* 	/1* 	if (octave > 4) *1/ */ 
+	/* 	/1* } *1/ */
+
+	/* 	if (ch >= 'a' && ch <= 'g') { */
+	/* 		int raw = 'c' - 'a'; */
+	/* 		int offset = (ch < 'c') ? (12 - 2 + raw) : (raw - 2); */
+	/* 		play_tone(BUZZER_PIN, pitches[(octave - 4) * 4 + offset], interval); */
+	/* 	} */
 	/* } */
 
 	/* uint64_t pitches[120]; */
