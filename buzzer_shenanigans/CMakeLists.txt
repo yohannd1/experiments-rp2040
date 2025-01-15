@@ -35,6 +35,7 @@ pico_sdk_init()
 
 add_executable(buzzer_shenanigans
     main.c
+    buzzer.c
 )
 
 pico_set_program_name(buzzer_shenanigans "buzzer shenanigans")
