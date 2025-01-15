@@ -34,8 +34,8 @@ project(buzzer_shenanigans C CXX ASM)
 pico_sdk_init()
 
 add_executable(buzzer_shenanigans
-    main.c
-    buzzer.c
+    src/main.c
+    src/buzzer.c
 )
 
 pico_set_program_name(buzzer_shenanigans "buzzer shenanigans")
