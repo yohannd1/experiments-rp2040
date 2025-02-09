@@ -44,14 +44,14 @@ int main(void) {
 	Buzzer bz;
 	Buzzer_init(&bz, BUZZER_PIN);
 
-	double c4_pitch = 2090.0; // WHY THE FUCK
+	float c4_pitch = 2090.0f; // WHY THE FUCK
 
 	const size_t octave_count = 5;
 	const size_t table_size = octave_count * 12;
 
 	uint32_t pitches[table_size];
 	for (int i = 0; i < table_size; i++) {
-		double freq = c4_pitch * pow(2, (double)i / 12.0);
+		float freq = c4_pitch * pow(2, (float)i / 12.0f);
 		pitches[i] = (uint32_t)freq;
 	}
 
@@ -59,7 +59,7 @@ int main(void) {
 	const uint bpm = 100;
 
 	// invert b/m to get m/b, then convert m/b to 60k ms/b
-	const double ms_per_beat = 1000.0 * 60.0 * (1.0 / (double)bpm);
+	const float ms_per_beat = 1000.0f * 60.0f * (1.0f / (float)bpm);
 
 	const char *song =
 		"c4 d4 e4 c16 d16 f4  r8 f8 r8 f8 r8 r4 "
@@ -79,14 +79,20 @@ int main(void) {
 	char *ptr; \
 	long number = strtol(&song[i+1], &ptr, 10); \
 	int end_index = ptr - song; \
-	/* if we got a number, use it - if not, just use 1.0 */ \
-	_divider = (end_index > i+1) ? number : 1.0; \
-	_duration = ms_per_beat * (1.0 / _divider); \
+	/* if we got a number, use it - if not, just use 1.0f */ \
+	_divider = (end_index > i+1) ? number : 1.0f; \
+	_duration = ms_per_beat * (1.0f / _divider); \
 	i = end_index; \
 }
 
 		if (c == ' ' || c == '\n' || c == '\r') {
 			i++;
+		} else if (c == '>') {
+			note += 12;
+			if (note >= table_size) note = table_size - 1;
+		} else if (c == '<') {
+			note -= 12;
+			if (note < 0) note = 0;
 		} else if (isNoteLetter(c)) {
 			note = charNoteToOffset(c);
 
@@ -105,14 +111,14 @@ int main(void) {
 				i++;
 			}
 
-			double divider;
+			float divider;
 			uint duration;
 			GET_DURATION_INTO(duration, divider);
 
 			printf("Note %c, divider %.1lf: pitches[%d] (%d) for %dms\n", c, divider, note, pitches[note], duration);
 			Buzzer_play(&bz, pitches[note], duration);
 		} else if (c == 'r' || c == 'R') {
-			double divider;
+			float divider;
 			uint duration;
 			GET_DURATION_INTO(duration, divider);
 
