@@ -63,8 +63,6 @@ int main(void) {
 		"c4 d4 c4 c16 c+16 d4 r8 d8 r8 d8 r8 r4 "
 		"c4 g4 f4 d16 d+16 e4 r8 e8 r8 e8 r8 r4 "
 		"c4 d4 e4 c16 d16 f4  r8 f8 r8 f8 r8 r4 "
-		"r2 "
-		"c4 < b4 a4 g4 f4 e4 d4 c4"
 		;
 
 	int octave = 2; // c-4

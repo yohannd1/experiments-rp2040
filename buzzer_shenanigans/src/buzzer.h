@@ -5,6 +5,7 @@
 
 typedef struct buzzer_t {
 	uint pin;
+	uint slice;
 } buzzer_t;
 
 void buzzer_init(buzzer_t *bz, uint pin);
