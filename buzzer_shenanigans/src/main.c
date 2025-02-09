@@ -17,7 +17,7 @@
 // TODO: precompile MML to avoid realtime playback issues
 // TODO: CMaj7 DMaj7 D#Min7 FMaj7
 // TODO: try to support lower frequencies...
-// TODO: 1-bit PCM using timers
+// TODO: 1-bit PCM using PIO
 
 int charNoteToOffset(char c) {
 	if (c >= 'A' && c <= 'Z') c += 'a'-'A';
@@ -44,16 +44,13 @@ int main(void) {
 	buzzer_t bz;
 	buzzer_init(&bz, BUZZER_PIN);
 
-	float c4_pitch = 2090.0f; // WHY THE FUCK
-
-	const size_t octave_count = 5;
+	const float c2_pitch = 261.6f / 4.0f;
+	const size_t octave_count = 7;
 	const size_t table_size = octave_count * 12;
 
-	uint32_t pitches[table_size];
-	for (int i = 0; i < table_size; i++) {
-		float freq = c4_pitch * pow(2, (float)i / 12.0f);
-		pitches[i] = (uint32_t)freq;
-	}
+	float pitches[table_size];
+	for (int i = 0; i < table_size; i++)
+		pitches[i] = c2_pitch * pow(2, (float)i / 12.0f);
 
 	const uint interval = 50;
 	const uint bpm = 100;
@@ -66,10 +63,11 @@ int main(void) {
 		"c4 d4 c4 c16 c+16 d4 r8 d8 r8 d8 r8 r4 "
 		"c4 g4 f4 d16 d+16 e4 r8 e8 r8 e8 r8 r4 "
 		"c4 d4 e4 c16 d16 f4  r8 f8 r8 f8 r8 r4 "
+		"r2 "
+		"c4 < b4 a4 g4 f4 e4 d4 c4"
 		;
 
-	sleep_ms(2000);
-
+	int octave = 2; // c-4
 	int note = 0;
 	int i = 0;
 	while (song[i] != '\0') {
@@ -79,7 +77,7 @@ int main(void) {
 	char *ptr; \
 	long number = strtol(&song[i+1], &ptr, 10); \
 	int end_index = ptr - song; \
-	/* if we got a number, use it - if not, just use 1.0f */ \
+	/* if we got a number, use it - if not, just use 1.0 */ \
 	_divider = (end_index > i+1) ? number : 1.0f; \
 	_duration = ms_per_beat * (1.0f / _divider); \
 	i = end_index; \
@@ -88,13 +86,13 @@ int main(void) {
 		if (c == ' ' || c == '\n' || c == '\r') {
 			i++;
 		} else if (c == '>') {
-			note += 12;
-			if (note >= table_size) note = table_size - 1;
+			if (octave < octave_count - 1) octave++;
+			i++;
 		} else if (c == '<') {
-			note -= 12;
-			if (note < 0) note = 0;
+			if (octave > 0) octave--;
+			i++;
 		} else if (isNoteLetter(c)) {
-			note = charNoteToOffset(c);
+			note = 12*octave + charNoteToOffset(c);
 
 			// + and - for detuning
 			while (true) {
@@ -115,7 +113,7 @@ int main(void) {
 			uint duration;
 			GET_DURATION_INTO(duration, divider);
 
-			printf("Note %c, divider %.1lf: pitches[%d] (%d) for %dms\n", c, divider, note, pitches[note], duration);
+			printf("Note %c, divider %.1f: pitches[%d] (%.2f) for %dms\n", c, divider, note, pitches[note], duration);
 			buzzer_play(&bz, pitches[note], duration);
 		} else if (c == 'r' || c == 'R') {
 			float divider;
