@@ -41,8 +41,8 @@ bool isNoteLetter(char c) {
 int main(void) {
 	stdio_init_all();
 
-	Buzzer bz;
-	Buzzer_init(&bz, BUZZER_PIN);
+	buzzer_t bz;
+	buzzer_init(&bz, BUZZER_PIN);
 
 	float c4_pitch = 2090.0f; // WHY THE FUCK
 
@@ -116,7 +116,7 @@ int main(void) {
 			GET_DURATION_INTO(duration, divider);
 
 			printf("Note %c, divider %.1lf: pitches[%d] (%d) for %dms\n", c, divider, note, pitches[note], duration);
-			Buzzer_play(&bz, pitches[note], duration);
+			buzzer_play(&bz, pitches[note], duration);
 		} else if (c == 'r' || c == 'R') {
 			float divider;
 			uint duration;
@@ -130,7 +130,7 @@ int main(void) {
 		}
 	}
 
-	Buzzer_deinit(&bz);
+	buzzer_deinit(&bz);
 
 	printf("Song finished! Now entering infinite loop\n");
 

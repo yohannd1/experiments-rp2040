@@ -4,18 +4,18 @@
 
 #include "buzzer.h"
 
-static void Buzzer_init_pwm(Buzzer *bz);
+static void buzzer_init_pwm(buzzer_t *bz);
 
-void Buzzer_init(Buzzer *bz, uint pin) {
+void buzzer_init(buzzer_t *bz, uint pin) {
 	bz->pin = pin;
-	Buzzer_init_pwm(bz);
+	buzzer_init_pwm(bz);
 }
 
-void Buzzer_deinit(Buzzer *bz) {
+void buzzer_deinit(buzzer_t *bz) {
 	bz->pin = 0;
 }
 
-static void Buzzer_init_pwm(Buzzer *bz) {
+static void buzzer_init_pwm(buzzer_t *bz) {
 	gpio_set_function(bz->pin, GPIO_FUNC_PWM);
 	uint slice_num = pwm_gpio_to_slice_num(bz->pin);
 
@@ -26,7 +26,7 @@ static void Buzzer_init_pwm(Buzzer *bz) {
 	pwm_set_gpio_level(bz->pin, 0); // initially turn off PWM
 }
 
-void Buzzer_play(Buzzer *bz, uint32_t frequency, uint duration_ms) {
+void buzzer_play(buzzer_t *bz, uint32_t frequency, uint duration_ms) {
 	uint slice_num = pwm_gpio_to_slice_num(bz->pin);
 	uint32_t clock_freq = clock_get_hz(clk_sys);
 	uint32_t top = clock_freq / frequency - 1;
