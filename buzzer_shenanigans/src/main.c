@@ -10,13 +10,11 @@
 
 #define BUZZER_PIN 10
 
-// TODO: MML string: octaves
+// TODO: two channels! (two buzzers and always sleep for the shortest duration)
 // TODO: MML string: `.` to make the length a little bit bigger
 // TODO: MML string: note slide
-// TODO: two channels! (two buzzers and always sleep for the shortest duration)
 // TODO: precompile MML to avoid realtime playback issues
 // TODO: CMaj7 DMaj7 D#Min7 FMaj7
-// TODO: try to support lower frequencies...
 // TODO: 1-bit PCM using PIO
 
 int charNoteToOffset(char c) {

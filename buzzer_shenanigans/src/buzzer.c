@@ -32,7 +32,7 @@ void buzzer_play(buzzer_t *bz, float frequency, uint duration_ms) {
 	uint32_t wrap = (uint32_t)(clock_freq / (clock_div * frequency) - 1.0f);
 
 	pwm_set_wrap(bz->slice, wrap);
-	pwm_set_gpio_level(bz->pin, wrap / 2);
+	pwm_set_gpio_level(bz->pin, wrap * 0.5f);
 
 	sleep_ms(duration_ms);
 
